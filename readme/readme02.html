@@ -129,9 +129,10 @@ cases are seperated by `---` so that we could put all of our test cases in the s
 `Test.java`
 ~~~~
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import org.antlr.v4.runtime.tree.ParseTree;
+import java.io.IOException;
 
 /*
  * CS59 P02: Functional Parser
@@ -145,8 +146,12 @@ public class Test {
 
         //-------------------------------
         // IMPORTANT: Change below line to change the file being read!
-        BufferedReader reader = new BufferedReader(new FileReader("inputs/valid_tests.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("inputs/invalid_tests.txt"));
         //-------------------------------
+
+        // create error listeners
+        SilentErrorListener errorListener = new SilentErrorListener();
+        LexerErrorListener lexerErrorListener = new LexerErrorListener();
 
         StringBuilder fileContent = new StringBuilder();
         String line = reader.readLine();
@@ -161,22 +166,100 @@ public class Test {
         int testNumber = 1;
 
         for (String section : sections) {
-            System.out.println("Processing test " + testNumber);
+            System.out.print("Processing test: " + testNumber);
             CharStream input = CharStreams.fromString(section);
             AutogradeLexer lexer = new AutogradeLexer(input);
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             AutogradeParser parser = new AutogradeParser(tokens);
 
-            ParseTree tree = parser.start(); // Parse the input starting from the 'start' rule
+            // add custom error listeners
+            parser.removeErrorListeners();
+            parser.addErrorListener(errorListener);
+            lexer.addErrorListener(lexerErrorListener);
 
-            // Check for unprocessed tokens --> error
-            if (tokens.LA(1) != Token.EOF) {
-                System.err.println("Syntax Error: Unprocessed tokens found in section " + testNumber + ". Input not fully parsed.");
+            parser.start();
+
+            // check for errors
+            if (errorListener.error() || lexerErrorListener.error() || tokens.LA(1) != Token.EOF) {
+                System.out.println(" INVALID :(");
+            } else {
+                System.out.println(" VALID :)");
             }
+
+            // reset error listeners
+            errorListener.reset();
+            lexerErrorListener.reset();
 
             testNumber++;
             Thread.sleep(100); // Sleep to make sure errors get printed along with test number (if this statement is not there then they will not)
         }
+    }
+}
+~~~~
+
+We also created custom error listeners to listen for errors, which are as follows. The second one (`LexerErrorListener`) is necessary
+for token recognition errors.
+
+
+`SilentErrorListener`
+~~~~
+import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
+
+/*
+ * CS59 P02: Functional Parser
+ * Author: Warren Shepard and Daisy li
+ * Date: 30 July 2024
+ * Credit: Warren and Daisy code from assignment 01 and 02 and class slides
+ */
+
+public class SilentErrorListener extends BaseErrorListener {
+    private boolean error = false;
+    public static final SilentErrorListener INSTANCE = new SilentErrorListener();
+
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                            int line, int charPositionInLine, String msg, RecognitionException e) {
+        error = true;
+    }
+
+    public boolean error() {
+        return error;
+    }
+
+    public void reset() {
+        error = false;
+    }
+}
+~~~~
+
+`LexerErrorListener`
+~~~~
+import org.antlr.v4.runtime.*;
+
+/*
+ * CS59 P02: Functional Parser
+ * Author: Warren Shepard and Daisy li
+ * Date: 30 July 2024
+ * Credit: Warren and Daisy code from assignment 01 and 02 and class slides
+ */
+
+public class LexerErrorListener extends BaseErrorListener {
+    private boolean error = false;
+
+    @Override
+    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
+                            int line, int charPositionInLine, String msg, RecognitionException e) {
+        error = true;
+    }
+
+    public boolean error() {
+        return error;
+    }
+
+    public void reset() {
+        error = false;
     }
 }
 ~~~~
@@ -457,7 +540,7 @@ z = x+y
 ---
 
 grader.configure {
-due_date = none,
+due_date = ,
 late_penalty = .1,
 early_time = 24h,
 early_reward = .01,
@@ -489,8 +572,7 @@ students = {Warren, Daisy}
 }
 ~~~~
 
-<img src="https://raw.githubusercontent.com/warrenshepard/cs59-final/main/parser_ss/invalid_tests_a.png" alt="blah" width="600">
-<img src="https://raw.githubusercontent.com/warrenshepard/cs59-final/main/parser_ss/invalid_tests_b.png" alt="blah" width="600">
+<img src="https://raw.githubusercontent.com/warrenshepard/cs59-final/main/parser_ss/invalid_tests.png" alt="blah" width="600">
 
 
 
