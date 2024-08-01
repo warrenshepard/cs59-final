@@ -131,7 +131,7 @@ z = x+y
 ---
 
 grader.configure {
-    due_date = none,
+    due_date = ,
     late_penalty = .1,
     early_time = 24h,
     early_reward = .01,
