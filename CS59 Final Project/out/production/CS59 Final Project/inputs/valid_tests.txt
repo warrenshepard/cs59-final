@@ -129,4 +129,4 @@ gr.configure_func {
 gr.addsubmission(name = "Jane", path = "submission1.py", day = 15/07/2024, time = 22:59)
 gr.addsubmission(name = "Joe", path = "submission2.py", day = 16/07/2024, time = 00:01)
 
-gr.grade(output = "class_grades.txt")
+gr.grade()

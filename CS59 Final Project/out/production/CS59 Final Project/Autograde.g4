@@ -46,7 +46,7 @@ num : DIGIT+ | decimal ;
 decimal : DIGIT* DOT DIGIT+ ;
 bool : TRUE | FALSE ;
 string_literal : STRING ;
-date : DIGIT DIGIT SLASH DIGIT DIGIT SLASH DIGIT DIGIT DIGIT DIGIT ; // in day/month/year format
+date : DIGIT DIGIT SLASH DIGIT DIGIT SLASH DIGIT DIGIT DIGIT DIGIT ; // in month/day/year format
 time : num LETTER ;                                   // number + minutes (m) hours (h) or days (d)
 
 // tokens

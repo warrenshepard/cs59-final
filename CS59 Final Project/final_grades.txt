@@ -1,0 +1,20 @@
+Grading submission: Jane
+  Function: isEven
+      Total score for function: 12.0
+  Function: add
+      Total score for function: 8.0
+Final score multiplier (from late/early penalty/reward): 1.01
+Final score for submission: 20.2 * 1.01 = 20.2
+
+Grading submission: Joe
+  Function: isEven
+      Total score for function: 0.0
+  Function: add
+      Total score for function: 4.0
+Final score multiplier (from late/early penalty/reward): 0.9
+Final score for submission: 3.6 * 0.9 = 3.6
+
+Statistics:
+Mean score: 11.9
+Median score: 11.9
+Range of scores: 16.599999999999998

@@ -1,0 +1,36 @@
+gr = new AutoGrader()
+
+tests = {1, False, 4;
+         2, True, 4;
+         3, False, 4;
+}
+
+tests2 = {{1, 2}, 3, 4;
+         {0, 0}, 0, 4;
+}
+
+gr.configure {
+    due_date = 08/14/2024,
+    late_penalty = .1,
+    early_time = 1h,
+    early_reward = .01,
+    language = python,
+    functions = {isEven(), add()}
+    }
+
+gr.configure_func {
+    function = isEven(),
+    test_cases = tests,
+    points = 12
+    }
+
+gr.configure_func {
+    function = add(),
+    test_cases = tests2,
+    points = 8
+    }
+
+gr.addsubmission(name = "Jane", path = "Example1", day = 08/14/2024, time = 22:59)
+gr.addsubmission(name = "Joe", path = "Example2", day = 08/15/2024, time = 00:01)
+
+gr.grade(output = "final_grades.txt")
